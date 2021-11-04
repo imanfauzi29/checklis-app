@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from "react"
-import { View, Text, CheckBox, Button, TextInput, ToastAndroid } from "react-native"
+import {
+    View,
+    Text,
+    CheckBox,
+    Button,
+    TextInput,
+    ToastAndroid
+} from "react-native"
 import Modal from "react-native-modal"
-import { FlatList } from "react-native-gesture-handler"
+import { FlatList, ScrollView } from "react-native-gesture-handler"
 import Card from "../components/Card"
-import { getAllChecklist, saveChecklist } from "../services/Services"
+import { deleteChecklist, getAllChecklist, saveChecklist } from "../services/Services"
 
 function ChecklistScreen() {
     const [checklist, setChecklist] = useState(null)
@@ -21,10 +28,16 @@ function ChecklistScreen() {
 
     const saveList = async () => {
         const body = {
-            "name": onInputChange.target.value
+            name: onInputChange.target.value
         }
 
-        const save = await saveChecklist(body).then(res => console.log(res))
+        await saveChecklist({ body }).then((res) => {
+                setShowModal(!showModal)
+        })
+    }
+
+    const deleteList = async (id) => {
+        await deleteChecklist({id}).then(res => getChecklistAll())
     }
 
     return (
@@ -32,6 +45,14 @@ function ChecklistScreen() {
             <View>
                 <Button title="Add List" onPress={() => setShowModal(true)} />
             </View>
+            <ScrollView>
+                <FlatList
+                    data={checklist}
+                    renderItem={({ item }) => (
+                        <Card text={item.name} id={item.id} handleDelete={deleteList} />
+                    )}
+                />
+            </ScrollView>
             <Modal isVisible={showModal}>
                 <View
                     style={{
@@ -41,7 +62,9 @@ function ChecklistScreen() {
                         paddingVertical: 30,
                         paddingHorizontal: 10
                     }}>
-                        <Text style={{fontSize: 16, marginBottom: 5}}>Add List</Text>
+                    <Text style={{ fontSize: 16, marginBottom: 5 }}>
+                        Add List
+                    </Text>
                     <View style={{ flex: 1, flexDirection: "row" }}>
                         <TextInput
                             style={{
@@ -53,19 +76,17 @@ function ChecklistScreen() {
                         />
                         <Button
                             title="Save"
-                            style={{marginLeft: 5}}
+                            style={{ marginLeft: 5 }}
                             onPress={saveList}
                         />
-                        <Button title="close" style={{marginLeft: 5, backgroundColor: "salmon"}} onPress={() => setShowModal(!showModal)} />
+                        <Button
+                            title="close"
+                            color="salmon"
+                            onPress={() => setShowModal(!showModal)}
+                        />
                     </View>
                 </View>
             </Modal>
-            <FlatList
-                data={checklist}
-                renderItem={({ item }) => (
-                    <Card text={item.name} id={item.id} />
-                )}
-            />
         </View>
     )
 }

@@ -38,7 +38,7 @@ const saveChecklist = ({ body }) => {
 
 const deleteChecklist = ({ id }) => {
     return axios
-        .delete(`${URL}/checklist`, {
+        .delete(`${URL}/checklist/${id}`, {
             headers
         })
         .then((res) => res.data)
