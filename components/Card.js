@@ -1,5 +1,5 @@
 import React from "react"
-import { View, CheckBox, Text, Button } from "react-native"
+import { View, Text, Button, CheckBox } from "react-native"
 
 function Card(props) {
     return (

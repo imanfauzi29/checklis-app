@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from "react"
-import {
-    View,
-    Text,
-    CheckBox,
-    Button,
-    TextInput,
-    ToastAndroid
-} from "react-native"
+import { View, Text, Button, TextInput } from "react-native"
 import Modal from "react-native-modal"
 import { FlatList, ScrollView } from "react-native-gesture-handler"
 import Card from "../components/Card"
-import { deleteChecklist, getAllChecklist, saveChecklist } from "../services/Services"
+import {
+    deleteChecklist,
+    getAllChecklist,
+    saveChecklist
+} from "../services/Services"
 
 function ChecklistScreen() {
     const [checklist, setChecklist] = useState(null)
@@ -32,24 +29,28 @@ function ChecklistScreen() {
         }
 
         await saveChecklist({ body }).then((res) => {
-                setShowModal(!showModal)
+            setShowModal(!showModal)
         })
     }
 
     const deleteList = async (id) => {
-        await deleteChecklist({id}).then(res => getChecklistAll())
+        await deleteChecklist({ id }).then((res) => getChecklistAll())
     }
 
     return (
         <View style={{ padding: 20 }}>
-            <View>
+            <View style={{alignItems: "flex-start"}}>
                 <Button title="Add List" onPress={() => setShowModal(true)} />
             </View>
             <ScrollView>
                 <FlatList
                     data={checklist}
                     renderItem={({ item }) => (
-                        <Card text={item.name} id={item.id} handleDelete={deleteList} />
+                        <Card
+                            text={item.name}
+                            id={item.id}
+                            handleDelete={deleteList}
+                        />
                     )}
                 />
             </ScrollView>
@@ -69,21 +70,23 @@ function ChecklistScreen() {
                         <TextInput
                             style={{
                                 height: 40,
-                                borderColor: "gray",
-                                borderWidth: 1
+                                borderColor: "#adadad",
+                                borderWidth: 1,
+                                paddingHorizontal: 5
                             }}
                             onChange={setOnInputChange}
                         />
-                        <Button
-                            title="Save"
-                            style={{ marginLeft: 5 }}
-                            onPress={saveList}
-                        />
-                        <Button
-                            title="close"
-                            color="salmon"
-                            onPress={() => setShowModal(!showModal)}
-                        />
+                        <View style={{flexDirection: "row", justifyContent: "space-between", marginLeft: 5}}>
+                            <Button
+                                title="Save"
+                                onPress={saveList}
+                            />
+                            <Button
+                                title="close"
+                                color="salmon"
+                                onPress={() => setShowModal(!showModal)}
+                            />
+                        </View>
                     </View>
                 </View>
             </Modal>
@@ -92,3 +95,4 @@ function ChecklistScreen() {
 }
 
 export default ChecklistScreen
+
